@@ -1,0 +1,109 @@
+* {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+*:before,
+*:after {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+html,
+body{
+  height: 100%;
+}
+
+label{
+  margin-bottom: 0;
+}
+
+a{
+  text-decoration: none;
+  &:hover{
+    text-decoration: none;
+  }
+}
+
+p{
+  margin-bottom: 0;
+}
+
+ul{
+  margin: 0;
+  padding: 0;
+}
+
+li{
+  list-style: none;
+}
+
+a:focus,
+a:active,
+button:focus,
+input:focus,
+textarea:focus,
+select:focus{
+  outline: none;
+}
+
+button{
+  cursor: pointer;
+}
+
+img{
+  max-width: 100%;
+}
+
+body{
+  font: 16px "Helvetica";
+  color: $dark;
+  background: rgb(238,235,230);
+}
+
+.more{
+  cursor: pointer;
+  @include flex();
+  .dot{
+    width: 4px;
+    height: 4px;
+    background: #9B9B9B;
+    @include radius(50%);
+    &:nth-child(2){
+      margin: 0 2px;
+    }
+  }
+}
+
+.main_btn{
+  background: $grey;
+  color: $dark;
+  padding: 3px 15px 6px;
+  font-size: 14px;
+  @include radius(15px);
+  @include transition(all .2s linear);
+  &:hover{
+    opacity: .8;
+  }
+}
+
+.second_btn{
+  @extend .main_btn;
+  color: $org;
+  background: $org2;
+  margin-left: 15px;
+  img{
+    display: inline-block;
+    vertical-align: -2px;
+  }
+}
+
+.container{
+  display: flex;
+  align-items: flex-start;
+  @media #{$tablets}{
+    flex-wrap: wrap;
+  }
+}

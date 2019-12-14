@@ -3,8 +3,23 @@
     .task(v-for='(task, index) in tasks', :key='index')
       .task_number Task - {{ doMath(index) }}
       .title {{ task.title }}
+      .delete(@click="removeTask(index)") Удалить
       .description  {{ task.description }}
       .date Expiration date {{ task.date }}
+    form(v-on:submit.prevent="addNewTask")
+      label Task title
+      input(v-model="title")(
+        type='text'
+        name='title'
+        checked
+      )
+      label Task description
+      input(v-model="description")(
+        type='text'
+        name='descr'
+        checked
+      )
+      button Add
 </template>
 
 <script>
@@ -29,6 +44,17 @@ export default {
   methods: {
     doMath (index) {
       return index + 1
+    },
+    addNewTask () {
+      this.tasks.push({
+        title: this.title,
+        description: this.description
+      })
+      this.title = ''
+      this.description = ''
+    },
+    removeTask: function (index) {
+      this.tasks.splice(index, 1)
     }
   }
 }
@@ -47,6 +73,16 @@ export default {
     @include radius(8px);
     .task{
       margin-bottom: 20px;
+      position: relative;
+      .delete{
+        position: absolute;
+        top: 0;
+        right: 0;
+        background: #ccc;
+        padding: 5px 20px;
+        font-size: 12px;
+        cursor: pointer;
+      }
       &_number{
         text-align: center;
         color: #000;
@@ -62,6 +98,24 @@ export default {
       .date{
         text-align: right;
       }
+    }
+  }
+  form{
+    border: 2px solid #ccc;
+    padding: 20px;
+    input{
+      width: 100%;
+      display: block;
+      margin: 10px 0 20px;
+      height: 30px;
+      border: none;
+      border-bottom: 1px solid #ccc;
+    }
+    button{
+      border: none;
+      background: $org;
+      padding: 10px 50px;
+      font-size: 16px;
     }
   }
 </style>

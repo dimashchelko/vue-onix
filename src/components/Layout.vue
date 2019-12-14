@@ -6,16 +6,19 @@
       <router-view/>
 </template>
 
-<script>
+<script lang="ts">
+import { Component, Vue } from 'vue-property-decorator'
 import Aside from './Aside.vue'
 import Header from './Header.vue'
 
-export default {
+@Component({
   components: {
     Aside,
     Header
   }
-}
+})
+
+export default class Layout extends Vue {}
 </script>
 
 <style lang="scss">

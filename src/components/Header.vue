@@ -4,7 +4,7 @@
       .header_top_left
         .project_logo
           img(src='../../public/assets/shapes.png', alt='shapes')
-        .project_name {{ project_name }}
+        .project_name {{ projectName }}
         .more
           .dot
           .dot
@@ -23,18 +23,17 @@
 
 </template>
 
-<script>
+<script lang="ts">
+import { Component, Vue } from 'vue-property-decorator'
 import HeaderMenu from './HeaderMenu.vue'
 
-export default {
+@Component({
   components: {
     HeaderMenu
-  },
-  data () {
-    return {
-      project_name: 'Website Redesign'
-    }
   }
+})
+export default class Header extends Vue {
+  projectName: string = 'Website Redesign'
 }
 </script>
 

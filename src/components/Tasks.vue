@@ -1,12 +1,18 @@
 <template lang="pug">
   .task_wr
-    .task(v-for='(task, index) in tasks', :key='index')
+    .task(v-for='(task, index) in tasks', :key='index' v-if="!task.isComplete")
       .task_number Task - {{ doMath(index) }}
       .title {{ task.title }}
-      .delete(@click="removeTask(index)") Удалить
+      .delete(@click="closeTask(index)") Done
       .description  {{ task.description }}
       .date Expiration date {{ task.date }}
-    form(v-on:submit.prevent="addNewTask")
+    form(v-on:submit="checkForm")
+      .error_div
+        p(v-if='errors.length')
+          b Please fix this errors:
+          ul
+            li(v-for='error in errors') {{ error }}
+        p
       label Task title
       input(v-model="title")(
         type='text'
@@ -19,6 +25,12 @@
         name='descr'
         checked
       )
+      label Select date
+      input(v-model="date")(
+        type='date'
+        name='date'
+        format="dd/mm/yyyy"
+      )
       button Add
 </template>
 
@@ -26,44 +38,89 @@
 export default {
   data () {
     return {
-      tasks: [{
-        title: 'Conquer the world',
-        description: 'I want to conquer this world',
-        date: '11.11.2020'
-      }, {
-        title: 'Win the lottery',
-        description: 'Maybe I win',
-        date: '31.12.2019'
-      }, {
-        title: 'Climb Mount Everest',
-        description: 'Do or die',
-        date: '24.06.2024'
-      }]
+      title: '',
+      description: '',
+      date: '',
+      isComplete: false,
+      errors: [],
+      tasks: []
     }
+  },
+  created () {
+    this.tasks = [{
+      title: 'Conquer the world',
+      description: 'I want to conquer this world',
+      date: '11.11.2020',
+      isComplete: false
+    }, {
+      title: 'Win the lottery',
+      description: 'Maybe I win',
+      date: '31.12.2019',
+      isComplete: false
+    }, {
+      title: 'Climb Mount Everest',
+      description: 'Do or die',
+      date: '24.06.2024',
+      isComplete: false
+    }]
   },
   methods: {
     doMath (index) {
       return index + 1
     },
-    addNewTask () {
-      this.tasks.push({
-        title: this.title,
-        description: this.description
-      })
-      this.title = ''
-      this.description = ''
+    checkForm: function (e) {
+      if (this.title && this.description && this.date) {
+        this.tasks.push({
+          title: this.title,
+          description: this.description,
+          date: this.date,
+          isComplete: false
+        })
+        this.title = ''
+        this.description = ''
+        this.date = ''
+        return true
+      }
+
+      this.errors = []
+
+      if (!this.title) {
+        this.errors.push('Please fill title.')
+      }
+      if (!this.description) {
+        this.errors.push('Please fill description.')
+      }
+      if (!this.date) {
+        this.errors.push('Please fill date.')
+      }
+      e.preventDefault()
     },
-    removeTask: function (index) {
-      this.tasks.splice(index, 1)
+    closeTask: function (index) {
+      this.tasks[index].isComplete = true
+      // this.tasks.splice(index, 1)
     }
+  },
+  mounted () {
+    let tasksLength = this.tasks.length
+    this.$root.$emit('tasksLength', tasksLength)
+  },
+  updated () {
+    let tasksLength = this.tasks.length
+    this.$root.$emit('tasksLength', tasksLength)
   }
 }
+
 </script>
 
 <style lang="scss">
   @import "../../public/assets/scss/vartiables.scss";
   @import "../../public/assets/scss/mixins.scss";
   @import "../../public/assets/scss/common.scss";
+  @-webkit-keyframes font {
+    from {transform: scale(1);}
+    50% {transform: scale(1.1);}
+    to {transform: scale(1.0);}
+  }
   .task_wr{
     max-width: 720px;
     width: 100%;
@@ -87,6 +144,7 @@ export default {
         text-align: center;
         color: #000;
         font-size: 24px;
+        @include animation(font 2s linear);
       }
       .title{
         font-size: 20px;
@@ -116,6 +174,11 @@ export default {
       background: $org;
       padding: 10px 50px;
       font-size: 16px;
+    }
+  }
+  .error_div{
+    p{
+      color: red;
     }
   }
 </style>

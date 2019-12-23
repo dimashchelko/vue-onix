@@ -17,7 +17,7 @@
         .dot
     .aside_bottom
       .task
-        #completed.task_block(@click='confirm')
+        #completed.task_block
           p#completed_num {{ completed.count }}
           span {{ completed.text }}
         #open.task_block
@@ -42,30 +42,19 @@ export default {
       name: 'Jean Gonzales',
       position: 'Product Owner',
       completed: {
-        count: 372,
+        count: '0',
         text: 'Completed Tasks'
       },
       open: {
-        count: 11,
+        count: '0',
         text: 'Open Tasks'
       }
     }
   },
-  methods: {
-    confirm () {
-      // eslint-disable-next-line no-restricted-globals
-      const sure = confirm('Are you sure you want to change the number of tasks?')
-      if (sure === true) {
-        if (this.open.count > 0) {
-          // eslint-disable-next-line no-plusplus
-          this.open.count--
-          // eslint-disable-next-line no-plusplus
-          this.completed.count++
-        } else {
-          alert('Yay Open tasks completed')
-        }
-      }
-    }
+  mounted () {
+    this.$root.$on('tasksLength', (lengthTasks) => {
+      this.open.count = lengthTasks
+    })
   }
 }
 </script>
@@ -142,9 +131,6 @@ export default {
     }
     &_bottom{
       padding: 20px 30px;
-      #completed{
-        cursor: pointer;
-      }
       .task{
         display: flex;
         align-items: center;
